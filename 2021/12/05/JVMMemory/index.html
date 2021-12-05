@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://example.com/img/RuntimeMemory.jpg">
 <meta property="og:image" content="http://example.com/img/Frame.jpg">
 <meta property="article:published_time" content="2021-12-05T00:25:16.000Z">
-<meta property="article:modified_time" content="2021-12-05T09:55:53.800Z">
+<meta property="article:modified_time" content="2021-12-05T10:05:52.676Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/img/jvmMemory.jpg">
@@ -193,8 +193,9 @@
 <p>&ensp;&ensp;&ensp;&ensp;栈帧（Frame）是用来存储数据和部分过程结果的数据结构，同时也被用来处理动态链接（Dynamic Linking）、方法返回值和异常分派（Dispatch Exception）。<font color=red>栈帧随着方法调用而创建，随着方法结束而销毁</font>——无论方法是正常完成还是异常完成（抛出了在方法内未被捕获的异常）都算作方法结束。</p>
 <p><img src="/img/Frame.jpg" alt="Frame"></p>
 <h2 id="本地方法栈（线程私有）"><a href="#本地方法栈（线程私有）" class="headerlink" title="本地方法栈（线程私有）"></a>本地方法栈（线程私有）</h2><p>&ensp;&ensp;&ensp;&ensp;本地方法区和<font color=red>Java Stack作用类似</font>，区别是虚拟机栈为Java方法服务，而<font color=red>本地方法栈则为Nativa方法服务</font>，如果一个VM是西安使用C-linkage模型来支持Native调用，那么该栈将会是一个C栈，当HotSpot VM直接就把本地方法栈和虚拟机栈合二为一。</p>
-<h2 id="堆（Heap-线程共享）-运行时数据区"><a href="#堆（Heap-线程共享）-运行时数据区" class="headerlink" title="堆（Heap-线程共享）-运行时数据区"></a>堆（Heap-线程共享）-运行时数据区</h2><p>&ensp;&ensp;&ensp;&ensp;是被线程共享的一块内存区域，<font color=red>创建对象和数组都保存在Java堆内存中，也是垃圾收集器进行垃圾回收的最重要的内存区域</font>。由于现代VM采用分代收集算法，因此Java堆从GC的角度还可以细分为：新生代（Eden区，From Survivor区和To SurVivor区）和老年代。</p>
-<h2 id="方法区-永久代（线程共享）"><a href="#方法区-永久代（线程共享）" class="headerlink" title="方法区/永久代（线程共享）"></a>方法区/永久代（线程共享）</h2><p>&ensp;&ensp;&ensp;&ensp;即我们常说的永久代（Permanent Generation），用于存储被JVM加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。Hotspot VM把GC分代收集扩展至方法区，即使用Java堆的永久代来实现方法去，这样HotSpot的垃圾收集器就可以像管理Java堆一样管理这部分内存，而不必为方法区开发专门的内存管理器（永久代的内存回收的主要目标时针对常量池的挥手和类型的卸载，因此收益一般很小）。</p>
+<h2 id="堆（Heap-线程共享）-运行时数据区"><a href="#堆（Heap-线程共享）-运行时数据区" class="headerlink" title="堆（Heap-线程共享）-运行时数据区"></a>堆（Heap-线程共享）-运行时数据区</h2><p>&ensp;&ensp;&ensp;&ensp;是被线程共享的一块内存区域，<font color=red>创建对象和数组都保存在Java堆内存中，也是垃圾收集器进行垃圾回收的最重要的内存区域</font>。由于现代VM采用<b>分代收集算法</b>，因此Java堆从GC的角度还可以细分为：<b>新生代</b>（Eden区，From Survivor区和To SurVivor区）和<b>老年代</b>。</p>
+<h2 id="方法区-永久代（线程共享）"><a href="#方法区-永久代（线程共享）" class="headerlink" title="方法区/永久代（线程共享）"></a>方法区/永久代（线程共享）</h2><p>&ensp;&ensp;&ensp;&ensp;即我们常说的<b>永久代（Permanent Generation）</b>，用于存储<b>被JVM加载的类信息、常量、静态变量、即时编译器编译后的代码</b>等数据。Hotspot VM把GC分代收集扩展至方法区，即<b>使用Java堆的永久代来实现方法区</b>，这样HotSpot的垃圾收集器就可以像管理Java堆一样管理这部分内存，而不必为方法区开发专门的内存管理器（永久代的内存回收的主要目标时针对<b>常量池的回收</b>和<b>类型的卸载</b>，因此收益一般很小）。</p>
+<p>&ensp;&ensp;&ensp;&ensp;<font color=red>运行时常量池</font>（Runtime Constant Pool）是方法区的一部分。Class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项信息是常量池（Constant Pool Table），用于存放编译器生成的各种字面量和符号引用，这部分内容将在类加载后存放到方法区的运行时常量池中。Java虚拟机堆Class文件的每一部分（自然也就包括常量池）的格式都有严格的规定，每一个字节用于存储哪种数据都必须符合规范上的要求，这样才会被虚拟机认可、装载和执行。</p>
 
       
 
