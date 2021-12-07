@@ -6,15 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives | Hexo</title>
+  <title>垃圾回收与算法 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/index.html">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="垃圾回收与算法">
+<meta property="og:url" content="http://example.com/2021/12/07/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E4%B8%8E%E7%AE%97%E6%B3%95/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/JVM_GC.jpg">
+<meta property="og:image" content="http://example.com/img/mark_sweep.jpg">
+<meta property="og:image" content="http://example.com/img/copying.jpg">
+<meta property="og:image" content="http://example.com/img/mark_compact.jpg">
+<meta property="og:image" content="http://example.com/img/young_GC.jpg">
+<meta property="article:published_time" content="2021-12-07T03:21:42.000Z">
+<meta property="article:modified_time" content="2021-12-07T04:21:39.191Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/JVM_GC.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -150,130 +158,166 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-垃圾回收与算法" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      垃圾回收与算法
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/07/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E4%B8%8E%E7%AE%97%E6%B3%95/" class="archive-article-date">
+
+        
+        <a href="/2021/12/07/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E4%B8%8E%E7%AE%97%E6%B3%95/" class="archive-article-date">
   	<time datetime="2021-12-07T03:21:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-07</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/07/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E4%B8%8E%E7%AE%97%E6%B3%95/">垃圾回收与算法</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/img/JVM_GC.jpg" alt="GC"></p>
+<span id="more"></span>
 
-        <div class="article-info info-on-right">
-          
-          
+<h2 id="如何确定垃圾"><a href="#如何确定垃圾" class="headerlink" title="如何确定垃圾"></a>如何确定垃圾</h2><h4 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h4><p>&ensp;&ensp;&ensp;&ensp;在Java中，引用和对象是有关联的。如果要操作对象则必须用引用进行。因此，很显然一个简单的办法是通过引用计数来判断下一个对象是否可以回收。简单说，即一个<font color=red>对象如果没有任何与之关联的引用，即他们的引用计数都不为0，则说明对象不太可能再被用到，那么这个对象就是可回收对象。</font></p>
+<h4 id="可达性分析"><a href="#可达性分析" class="headerlink" title="可达性分析"></a>可达性分析</h4><p>&ensp;&ensp;&ensp;&ensp;为了解决引用计数法的循环引用为题，Java使用了可达性分析的方法。通过一系列的“GC roots”对象作为起点搜索。如果在<font color=red>“GC roots”和一个对象之间没有可达路径，则称该对象是不可达的。</font>要注意的是，不可达对象不等价与可回收对象，<font color=red>不可达对象变为可回收对象至少要经过两次标记过程。</font>两次标记后仍然是可回收对象，则面临回收。</p>
+<h4 id="什么可以作为GC-root？"><a href="#什么可以作为GC-root？" class="headerlink" title="什么可以作为GC root？"></a>什么可以作为GC root？</h4><ul>
+    <li>虚拟机栈中引用的对象，即栈帧的本地变量表</li>
+    <li>方法区中常量引用的对象</li>
+    <li>方法区中静态属性引用的对象</li>
+    <li>本地方法中Native引用的对象</li>
+</ul>
 
+<h2 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h2><h4 id="标记清除算法（Mark-Sweep）"><a href="#标记清除算法（Mark-Sweep）" class="headerlink" title="标记清除算法（Mark-Sweep）"></a>标记清除算法（Mark-Sweep）</h4><p>&ensp;&ensp;&ensp;&ensp;最基础的垃圾回收算法，分为<font color = red>两个阶段，标注和清除。</font>标记阶段标记出所有需要回收的对象，清除阶段回收被标记的对象。如下图</p>
+<p><img src="/img/mark_sweep.jpg" alt="Mark-Sweep"></p>
+<p>&ensp;&ensp;&ensp;&ensp;从图中我们可以发现，该算法<font color = red>最大的问题是内存碎片化严重</font>，后续可能发生大对象不能找到可利用空间的问题。</p>
+<h4 id="复制算法（copying）"><a href="#复制算法（copying）" class="headerlink" title="复制算法（copying）"></a>复制算法（copying）</h4><p>&ensp;&ensp;&ensp;&ensp;为了解决Mark-Sweep算法内存碎片化的缺陷而被提出的算法。按内存容量将内存划分为等大小的两块。每次只用其中一块，当这一块内存满后将尚存活的对象复制到另一块上区，把已使用的内存清掉，如图：</p>
+<p><img src="/img/copying.jpg" alt="copying"></p>
+<p>&ensp;&ensp;&ensp;&ensp;这种算法虽然实现简单，内存效率高，不易产生内存碎片，但是最大的问题是可用内存被压缩到了原本的一半。且存货对象增多的话，Copying算法的效率回大大降低。</p>
+<h4 id="标记整理算法（Mark-Compact）"><a href="#标记整理算法（Mark-Compact）" class="headerlink" title="标记整理算法（Mark-Compact）"></a>标记整理算法（Mark-Compact）</h4><p>&ensp;&ensp;&ensp;&ensp;结合了以上两种算法，为了避免缺陷而提出。标记阶段和Mark-Sweep算法相同，<font color = red>标记后不是清理对象，而是将存活的对象移向内存的一端。然后清除端边界外的对象。</font>如图：</p>
+<p><img src="/img/mark_compact.jpg" alt="Mark-Compact"></p>
+<h4 id="分代回收算法"><a href="#分代回收算法" class="headerlink" title="分代回收算法"></a>分代回收算法</h4><p>&ensp;&ensp;&ensp;&ensp;分代回收算法是目前大部分JVM所采用的方法，其核心思想是根据对象存货的不同生命周期将内存划分为不同的域，一般情况下将GC堆划分为老年代（Tenured/Old Generation）和年轻代（Young Generation）。老年代的特点是每次垃圾回收时只有少量的对象需要被回收，新生代的特点时每次垃圾回收时都有大量垃圾需要回收，因此可以根据不同区域选择不同的算法。</p>
+<h6 id="新生代与复制算法"><a href="#新生代与复制算法" class="headerlink" title="新生代与复制算法"></a>新生代与复制算法</h6><p>&ensp;&ensp;&ensp;&ensp;目前大部分JVM的GC对于新生代都采取Copying算法，因为新生代中每次垃圾回收都要回收大部分对象，即复制的操作比较少，但通常不是按照1:1来划分新生代。一般将新生代划分为一块较大的Eden空间和两个较小的Survivor空间（From Space，To Space），每次使用Eden空间和其中一块Survivor空间，当进行回收时，将两块空间中还存货的对象复制到另一块Survivor空间中。</p>
+<p><img src="/img/young_GC.jpg" alt="young_GC"></p>
+<h6 id="老年代与标记整理算法"><a href="#老年代与标记整理算法" class="headerlink" title="老年代与标记整理算法"></a>老年代与标记整理算法</h6><p>&ensp;&ensp;&ensp;&ensp;老年代因为每次只回收少量对象，因此采用Mark-Compact算法</p>
+<ol>
+    <li>JAVA虚拟机提到过的处于<font color="red">永生代，他用来存储class类、常量、方法描述等。</font>对永生代的回收主要包括废弃常量和无用的类。</li>
+    <li>对象的内存分配主要是在新生代Eden Space 和Survivor Space 和 From Space（Survivor 目前存放对象的那一块），少数情况回直接分配到老年代。</li>
+    <li>当新生代的 Eden Space 和 From Space 空间不足时就会发生一次 GC，进行 GC 后，Eden Space 和 From Space 区的存活对象会被挪到 To Space，然后将 Eden Space 和 From Space 进行清理。</li>
+    <li>如果 To Space 无法足够存储某个对象，则将这个对象存储到老年代</li>
+    <li>在进行 GC 后，使用的便是 Eden Space 和 To Space 了，如此反复循环</li>
+    <li>当对象在 Survivor 区躲过一次 GC 后，其年龄就会+1，<font color="red">默认情况下年龄到达15的对象会被移到老年代中。</font></li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/12/07/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E4%B8%8E%E7%AE%97%E6%B3%95/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/05/JVMMemory/" class="archive-article-date">
-  	<time datetime="2021-12-05T00:25:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-05</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2021/12/05/JVMMemory/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">JVMMemory</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/05/JVMMemory/">JVMMemory</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/04/%E5%88%9D%E8%AF%86JVM/" class="archive-article-date">
-  	<time datetime="2021-12-04T04:52:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/04/%E5%88%9D%E8%AF%86JVM/">初识JVM</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/03/hello-world/" class="archive-article-date">
-  	<time datetime="2021-12-03T03:38:44.028Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/03/hello-world/">Hello World</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -296,8 +340,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
