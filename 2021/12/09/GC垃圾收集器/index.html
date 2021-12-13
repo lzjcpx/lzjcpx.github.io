@@ -21,7 +21,7 @@
 <meta property="og:image" content="http://example.com/img/Parallel_ScavengeAndParallel_Old.jpg">
 <meta property="og:image" content="http://example.com/img/CMS.jpg">
 <meta property="article:published_time" content="2021-12-09T12:03:41.000Z">
-<meta property="article:modified_time" content="2021-12-09T13:30:45.498Z">
+<meta property="article:modified_time" content="2021-12-13T02:57:43.227Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/img/collect.jpg">
@@ -176,13 +176,13 @@
 <p><img src="/img/collect.jpg" alt="垃圾收集器"></p>
 <span id="more"></span>
 
-<h4 id="Serial-收集器（单线程、复制算法）"><a href="#Serial-收集器（单线程、复制算法）" class="headerlink" title="Serial 收集器（单线程、复制算法）"></a>Serial 收集器（单线程、复制算法）</h4><p>&ensp;&ensp;&ensp;&ensp;<font color = "red">Serial（英文连续）是最基本的垃圾收集器，使用复制算法，</font>曾经是JDK 1.3.1 之前新生代唯一的垃圾收集器。Serial是<br>一个单线程的收集器，它不但会使用一个CPU或一条线程去完成垃圾收集工作，并且在进行垃圾收集的同时，必须暂停其他所有的工作线程，知道垃圾收集<br>结束，我们称这一过程为 Stop the world。</p>
-<p>&ensp;&ensp;&ensp;&ensp;Serial垃圾收集器虽然在收集垃圾过程中需要暂停其他所有的工作线程，但是它简单高效，对于限定个CPU环境来说，没有<br>线程交互的开销，可以获得最高的单线程垃圾收集效率，因此Serial垃圾收集器依然是<font color = "red">Java虚拟机与逆行在Client模式下默认的新生代垃圾收集器。</font></p>
-<h4 id="ParNew-垃圾收集器（Serial-多线程）"><a href="#ParNew-垃圾收集器（Serial-多线程）" class="headerlink" title="ParNew 垃圾收集器（Serial + 多线程）"></a>ParNew 垃圾收集器（Serial + 多线程）</h4><p>&ensp;&ensp;&ensp;&ensp;ParNew垃圾收集器其实<font color = "red">是Serial收集器的多线程版本，</font>也使用复制算法，除了使用多线程<br>进行垃圾收集之外，其余的行为和Serial收集器完全一样，ParNew垃圾收集器在垃圾收集过程中同样也要暂停所有其他的工作线程。</p>
+<h4 id="Serial-收集器（单线程、复制算法）"><a href="#Serial-收集器（单线程、复制算法）" class="headerlink" title="Serial 收集器（单线程、复制算法）"></a>Serial 收集器（单线程、复制算法）</h4><p>&ensp;&ensp;&ensp;&ensp;<font color = "red">Serial（英文连续）是最基本的垃圾收集器，使用复制算法，</font>曾经是JDK 1.3.1 之前新生代唯一的垃圾收集器。Serial是一个单线程的收集器，它不但会使用一个CPU或一条线程去完成垃圾收集工作，并且在进行垃圾收集的同时，必须暂停其他所有的工作线程，直到垃圾收集结束，我们称这一过程为 Stop the world，简称STW。</p>
+<p>&ensp;&ensp;&ensp;&ensp;Serial垃圾收集器虽然在收集垃圾过程中需要暂停其他所有的工作线程，但是它简单高效，对于限定个CPU环境来说，没有线程交互的开销，可以获得最高的单线程垃圾收集效率，因此Serial垃圾收集器依然是<font color = "red">Java虚拟机与逆行在Client模式下默认的新生代垃圾收集器。</font></p>
+<h4 id="ParNew-垃圾收集器（Serial-多线程）"><a href="#ParNew-垃圾收集器（Serial-多线程）" class="headerlink" title="ParNew 垃圾收集器（Serial + 多线程）"></a>ParNew 垃圾收集器（Serial + 多线程）</h4><p>&ensp;&ensp;&ensp;&ensp;ParNew垃圾收集器其实<font color = "red">是Serial收集器的多线程版本，</font>也使用复制算法，除了使用多线程进行垃圾收集之外，其余的行为和Serial收集器完全一样，ParNew垃圾收集器在垃圾收集过程中同样也要暂停所有其他的工作线程。</p>
 <p>&ensp;&ensp;&ensp;&ensp;ParNew收集器默认开启和CPU数目相同的线程数，可以通过-XX:ParalleGCThreads 参数来限制垃圾收集器的线程数。（Parallel：平行的）</p>
-<p>&ensp;&ensp;&ensp;&ensp;ParNew虽然是除了多线程外和Serial收集器几乎完全一样，但是ParNew垃圾收集器是<font color = "red">很多Java<br>虚拟机运行在Server模式下新生代的默认垃圾收集器</font></p>
-<h4 id="Parallel-Scavenge-收集器（多线程复制算法、高效）"><a href="#Parallel-Scavenge-收集器（多线程复制算法、高效）" class="headerlink" title="Parallel Scavenge 收集器（多线程复制算法、高效）"></a>Parallel Scavenge 收集器（多线程复制算法、高效）</h4><p>&ensp;&ensp;&ensp;&ensp;Parallel Scavenge 收集器也是一个新生代垃圾收集器，同样使用复制算法，也是一个多线程的垃圾收集器，<font color = "red"><br>它重点关注的是程序达到一个可控制的吞吐量</font>，高吞吐量可以最高效地利用CPU时间，尽快完成程序地运算任务，主要适用与在后台运算而不需要<br>太多交互的任务。<font color = "red">自适应调节策略也是 Parallel Scavenge 收集器与 ParNew 收集器的一个重要区别。</font></p>
-<h4 id="Serial-Old-收集器（单线程标记整理算法）"><a href="#Serial-Old-收集器（单线程标记整理算法）" class="headerlink" title="Serial Old 收集器（单线程标记整理算法）"></a>Serial Old 收集器（单线程标记整理算法）</h4><p>&ensp;&ensp;&ensp;&ensp;<font color = "red">Serial Old 是 Serial 垃圾收集器老年代版本,</font>它同样是个单线程的收集器，使用标记<br>-整理算法，这个收集器也主要是<font color = "red">运行在Client默认的Java虚拟机默认的老年代垃圾收集器。</font>在Server模式下，主要有<br>两个用途：</p>
+<p>&ensp;&ensp;&ensp;&ensp;ParNew虽然是除了多线程外和Serial收集器几乎完全一样，但是ParNew垃圾收集器是<font color = "red">很多Java虚拟机运行在Server模式下新生代的默认垃圾收集器</font></p>
+<h4 id="Parallel-Scavenge-收集器（多线程复制算法、高效）"><a href="#Parallel-Scavenge-收集器（多线程复制算法、高效）" class="headerlink" title="Parallel Scavenge 收集器（多线程复制算法、高效）"></a>Parallel Scavenge 收集器（多线程复制算法、高效）</h4><p>&ensp;&ensp;&ensp;&ensp;Parallel Scavenge 收集器也是一个新生代垃圾收集器，同样使用复制算法，也是一个多线程的垃圾收集器，<font color = "red">它重点关注的是程序达到一个可控制的吞吐量</font>，高吞吐量可以最高效地利用CPU时间，尽快完成程序地运算任务，主要适用与在后台运算而不需要太多交互的任务。<font color = "red">自适应调节策略也是 Parallel Scavenge 收集器与 ParNew 收集器的一个重要区别。</font></p>
+<h4 id="Serial-Old-收集器（单线程标记整理算法）"><a href="#Serial-Old-收集器（单线程标记整理算法）" class="headerlink" title="Serial Old 收集器（单线程标记整理算法）"></a>Serial Old 收集器（单线程标记整理算法）</h4><p>&ensp;&ensp;&ensp;&ensp;<font color = "red">Serial Old 是 Serial 垃圾收集器老年代版本,</font>它同样是个单线程的收集器，使用标记-整理算法，这个收集器也主要是<font color = "red">运行在Client默认的Java虚拟机默认的老年代垃圾收集器。</font>在Server模式下，主要有两个用途：</p>
 <ol>
     <li>在JDK 1.5 之前版本与新生代的 Parallel Scavenge 收集器搭配使用。</li>
     <li>作为老年代中使用 CMS 收集器的后备垃圾手机方案。新生代 Serial 与老年代 Serial Old 搭配垃圾收集过程图：</li>
