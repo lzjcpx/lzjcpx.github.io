@@ -6,15 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives | Hexo</title>
+  <title>Map | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/page/2/index.html">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="Map">
+<meta property="og:url" content="http://example.com/2021/12/23/Map/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/Map.jpg">
+<meta property="og:image" content="http://example.com/img/Java7_HashMap.jpg">
+<meta property="og:image" content="http://example.com/img/Java8_HashMap.jpg">
+<meta property="og:image" content="http://example.com/img/Java7_ConcurrentHashMap.jpg">
+<meta property="article:published_time" content="2021-12-23T07:33:52.000Z">
+<meta property="article:modified_time" content="2021-12-23T11:35:52.361Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/Map.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -142,106 +149,155 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Map" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Map
+    </h1>
+  
+
+        
+        <a href="/2021/12/23/Map/" class="archive-article-date">
+  	<time datetime="2021-12-23T07:33:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-23</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/img/Map.jpg" alt="Map"></p>
+<span id="more"></span>
+
+<h4 id="HashMap（数组-链表-红黑树）"><a href="#HashMap（数组-链表-红黑树）" class="headerlink" title="HashMap（数组 + 链表 + 红黑树）"></a>HashMap（数组 + 链表 + 红黑树）</h4><p>&ensp;&ensp;&ensp;&ensp;HashMap 根据键的 HashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。HashMap 最多只允许一条记录的键为null，荀彧多条记录的值为 null。 HashMap 废县丞安全，即任一时刻可以有多个线程同时写 HashMap，可能会导致数据不一致。如果需要满足线程安全，可以用 Collections 的 SynchronizedMap 方法使 HashMap 具有线程安全的能力，或者使用 ConcurrentHashMap。我们用下面这张图</p>
+<h6 id="Java7实现"><a href="#Java7实现" class="headerlink" title="Java7实现"></a>Java7实现</h6><p><img src="/img/Java7_HashMap.jpg" alt="Java7_HashMap"></p>
+<p>&ensp;&ensp;&ensp;&ensp;大方向上，HashMap 里面是一个数组，然后数组中每个元素是一个单向链表。上图中，每个绿的的实体是嵌套类 Entry 的实例，Entry包含四个属性：<font color = "red">key，value，hash 值和用于单向链表的 next。</font></p>
+<ol>
+    <li>capacity：当前数组容量，始终保持 2^n，可以扩容，扩容后数组大小为当前的 2 倍。</li>
+    <li>loadFactor：负载因子，默认为0.75</li>
+    <li>threshold：扩容的阈值，等于 capacity * loadFactor</li>
+</ol>
+
+<h6 id="Java8实现"><a href="#Java8实现" class="headerlink" title="Java8实现"></a>Java8实现</h6><p>&ensp;&ensp;&ensp;&ensp;Java8 对 HashMap 进行了一些修改，<font color = "red">最大的不同就是利用了红黑树，所以其由 数组 + 链表 + 红黑树 组成。</font>根据 Java7 HashMap 的介绍，我们知道，查找的时候，根据 hash 值我们能够快速定位到数组的具体下标，但是之后的话，<font color = "red">需要顺着链表一个个比较下去才能找到我们需要的，时间复杂度取决于链表的长度，为 O(n)。</font>为了降低这部分的开销，在 Java8 中<font color = "red">当链表中的元素超过了 8 给以后，会将链表转换为红黑树，</font>在这些位置进行查找的时候可以降低时间复杂度为 O（logN）。</p>
+<p><img src="/img/Java8_HashMap.jpg" alt="Java8_HashMap"></p>
+<h4 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h4><h6 id="Segment-段"><a href="#Segment-段" class="headerlink" title="Segment 段"></a>Segment 段</h6><p>&ensp;&ensp;&ensp;&ensp;ConcurrentHashMap 和 HashMap 思路是差不多的，但是因为它支持并发操作，所以要复杂一些。整个 ConcurrentHashMap 由一个个 Segment 组成，Segment代表“部分”或“一段”的意思，所以很多地方都会将其描述为分段锁。注意，行文中，我很多地方用了“槽”来代表一个 segment。</p>
+<h6 id="线程安全（Segment-继承-RenntrantLock-加锁）"><a href="#线程安全（Segment-继承-RenntrantLock-加锁）" class="headerlink" title="线程安全（Segment 继承 RenntrantLock 加锁）"></a>线程安全（Segment 继承 RenntrantLock 加锁）</h6><p>&ensp;&ensp;&ensp;&ensp;简单理解就是，ConcurrentHashMap 是一个 Segment 数组，Segment 通过继承 ReentrantLock 来进行加锁，素以每次需要加锁的操作锁住的是一个 segment，这样只要保证每个 Segment 是线程安全的，也就实现了全局的线程安全。</p>
+<p><img src="/img/Java7_ConcurrentHashMap.jpg" alt="Java7_ConcurrentHashMap"></p>
+<h6 id="并行度（默认16）"><a href="#并行度（默认16）" class="headerlink" title="并行度（默认16）"></a>并行度（默认16）</h6><p>&ensp;&ensp;&ensp;&ensp;concurrencyLevel：并行级别、并发数、Segment数，怎么翻译不重要，理解他。默认是 16 ，也就说<font color = "red"> ConcurrentHashMap 有 16个 Segments,</font>所以理论上，这个时候，最多可以支持 16 个线程并发写，只要它们的操作分别分布在不同的 Segment 上。这个值可以在初始化的时候设置为其他值，但是一旦初始化以后，它是不可以扩容的。再具体到每个 Segment 内部，其实每个 Segment 很像之前介绍的 HashMao，不过他要保证线程安全，所以处理起来要麻烦些。</p>
+<h6 id="Java8实现（引入了红黑树）"><a href="#Java8实现（引入了红黑树）" class="headerlink" title="Java8实现（引入了红黑树）"></a>Java8实现（引入了红黑树）</h6><p>&ensp;&ensp;&ensp;&ensp;Java8 对 ConcurrentHashMap 进行了比较大的改动，Java8 也引入了红黑树。</p>
+<h4 id="HashTable（线程安全）"><a href="#HashTable（线程安全）" class="headerlink" title="HashTable（线程安全）"></a>HashTable（线程安全）</h4><p>&ensp;&ensp;&ensp;&ensp;Hashtable 是遗留类，很多映射的常用功能与 HashMap 类似，不同的是它承自 Dictionary 类，并且是线程安全的，任一时间只有一个线程能写 Hashtable，并发性不如 ConcurrentHashMap，因为 ConcurrentHashMap 引入了分段锁。Hashtable 不建议在新代码中使用，不需要线程安全的场合可以用 HashMap 替换，需要线程安全的场合可以用 ConcurrentHashMap 替换。 </p>
+<h4 id="TreeMap（可排序）"><a href="#TreeMap（可排序）" class="headerlink" title="TreeMap（可排序）"></a>TreeMap（可排序）</h4><p>&ensp;&ensp;&ensp;&ensp;TreeMap 实现 SortedMap 接口，能够把它保存的记录根据键排序，默认是按键值的升序排序，也可以指定排序的比较器，当用 Iterator 遍历 TreeMap 时，得到的记录是排过序的。如果使用排序的映射，建议使用 TreeMap。在使用 TreeMap 时，key 必须实现 Comparable 接口或者在构造 TreeMap 传入自定义的 Comparator，否则会在运行时抛出 java.lang.ClassCastException 类型的异常。</p>
+<h4 id="LinkHashMap（记录插入顺序）"><a href="#LinkHashMap（记录插入顺序）" class="headerlink" title="LinkHashMap（记录插入顺序）"></a>LinkHashMap（记录插入顺序）</h4><p>&ensp;&ensp;&ensp;&ensp;LinkedHashMap 是 HashMap 的一个子类，保存了记录的插入顺序，在用 Iterator 遍历 LinkedHashMap 时，先得到的记录肯定是先插入的，也可以在构造时带参数，按照访问次序排序。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/05/JVMMemory/" class="archive-article-date">
-  	<time datetime="2021-12-05T00:25:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/05/JVMMemory/">JVMMemory</a>
-    </h1>
-  
+      
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/12/23/Map/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/04/%E5%88%9D%E8%AF%86JVM/" class="archive-article-date">
-  	<time datetime="2021-12-04T04:52:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-04</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2021/12/22/Set/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Set</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/04/%E5%88%9D%E8%AF%86JVM/">初识JVM</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/03/hello-world/" class="archive-article-date">
-  	<time datetime="2021-12-03T03:38:44.028Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/03/hello-world/">Hello World</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/">&amp;laquo; Prev</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
-    </nav>
   
 
 
@@ -265,8 +321,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
