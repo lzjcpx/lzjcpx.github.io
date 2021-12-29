@@ -144,6 +144,72 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-线程生命周期" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/12/29/%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">线程生命周期</a>
+    </h1>
+  
+
+        
+        <a href="/2021/12/29/%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="archive-article-date">
+  	<time datetime="2021-12-29T06:10:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>&ensp;&ensp;&ensp;&ensp;当线程被创建并启动以后，它既不是已启动就进入了执行状态，也不是一致处于执行状态。在线程的生命周期中，它要经过新建、就绪、运行、阻塞和死亡 5 种状态。尤其时当线程启动以后，他不可能一直“霸占”着 CPU 独自运行，所以 CPU需要在多条线程之间切换，于是线程状态也会多次在运行、阻塞之间切换</p>
+<h4 id="新建状态"><a href="#新建状态" class="headerlink" title="新建状态"></a>新建状态</h4><p>&ensp;&ensp;&ensp;&ensp;当程序<font color = "red">使用 new 关键字创建了一个线程之后，</font>该线程就处于新建状态，此时仅有 JVM 为其分配内存，并初始化其成员变量的值。</p>
+        
+          <a class="article-more-a" href="/2021/12/29/%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/12/29/%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-4中线程池" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -716,72 +782,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/12/10/BIO%E3%80%81NIO%E5%92%8CAIO/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-GC垃圾收集器" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/12/09/GC%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/">GC垃圾收集器</a>
-    </h1>
-  
-
-        
-        <a href="/2021/12/09/GC%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/" class="archive-article-date">
-  	<time datetime="2021-12-09T12:03:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>&ensp;&ensp;&ensp;&ensp;Java堆内存被划分为新生代和老年代两部分，新生代主要使用复制和标记-清除垃圾回收算法；<br>老年代主要使用标记-整理回收算法，因此java虚拟中针对新生代和老年代分别提供了多种不同的垃圾收集器，JDK1.6中Sun HotSpot 虚拟机的垃圾收集器如下：</p>
-<p><img src="/img/collect.jpg" alt="垃圾收集器"></p>
-        
-          <a class="article-more-a" href="/2021/12/09/GC%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/12/09/GC%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/">展开全文 >></a>
         </p>
       
 
