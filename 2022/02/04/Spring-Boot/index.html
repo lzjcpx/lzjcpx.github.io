@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Hexo</title>
+  <title>Spring Boot | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/page/3/index.html">
+  <meta name="description" content="Spring Boot与 Spring 相比有什么优势？     Spring Boot是对 Spring 框架的眼神和扩展，他的出现是为了简化 Spring 框架初始的 xml 配置。Spring Boot 可以没有繁琐的 xml 配置文件，能够更高效，更快速的搭建环境">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Boot">
+<meta property="og:url" content="http://example.com/2022/02/04/Spring-Boot/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Spring Boot与 Spring 相比有什么优势？     Spring Boot是对 Spring 框架的眼神和扩展，他的出现是为了简化 Spring 框架初始的 xml 配置。Spring Boot 可以没有繁琐的 xml 配置文件，能够更高效，更快速的搭建环境">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-04T12:24:16.000Z">
+<meta property="article:modified_time" content="2022-02-04T12:50:08.102Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -142,32 +146,52 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-JVMMemory" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-Spring-Boot" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/12/05/JVMMemory/">JVMMemory</a>
+    <h1 class="article-title" itemprop="name">
+      Spring Boot
     </h1>
   
 
         
-        <a href="/2021/12/05/JVMMemory/" class="archive-article-date">
-  	<time datetime="2021-12-05T00:25:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-05</time>
+        <a href="/2022/02/04/Spring-Boot/" class="archive-article-date">
+  	<time datetime="2022-02-04T12:24:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-04</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="JVM内存区域"><a href="#JVM内存区域" class="headerlink" title="JVM内存区域"></a>JVM内存区域</h3><p><img src="/img/jvmMemory.jpg" alt="JVMMemory"></p>
-        
-          <a class="article-more-a" href="/2021/12/05/JVMMemory/#more">more >></a>
-        
+        <h4 id="Spring-Boot与-Spring-相比有什么优势？"><a href="#Spring-Boot与-Spring-相比有什么优势？" class="headerlink" title="Spring Boot与 Spring 相比有什么优势？"></a>Spring Boot与 Spring 相比有什么优势？</h4><ul>
+    <li>Spring Boot是对 Spring 框架的眼神和扩展，他的出现是为了简化 Spring 框架初始的 xml 配置。Spring Boot 可以没有繁琐的 xml 配置文件，能够更高效，更快速的搭建环境</li>
+    <span id="more"></span>
+    <li>首先 Spring Boot 提供了更多的 Starters 用于快速构建项目，starters 是一个启动器，它包含了一系列相关的 jar 包，比如说一个 web 引用你需要导入 web 包，webmvc 包，但Spring Boot只需要一个 starter-web 就可以把相关依赖全部导入。</li>
+    <li>还有 Spring Boot 提供了起步依赖，在项目创建的时候，就可以选择我们可能回用到的包，大大缩短了我们寻找添加包的时间</li>
+    <li>Spring Boot 支持内嵌容器，我们不需要自己去配置 tomcat 了，它里面有 tomcat，有 jetty，默认是 tomcat</li>
+    <li>Spring Boot 会对依赖进行管理，在 starter-parent 里面定义了所有可能用到场景下的包的版本号，并且这些版本号和当前 Spring Boot 相对应的版本。</li>
+</ul>
+
+<h4 id="SpringApplication-run干了什么事？"><a href="#SpringApplication-run干了什么事？" class="headerlink" title="SpringApplication.run干了什么事？"></a>SpringApplication.run干了什么事？</h4><p>&ensp;&ensp;&ensp;&ensp;Run 之后主要经理了两个阶段，准备阶段和运行阶段准备阶段：（构造方法做的事情）</p>
+<ol>
+    <li>配置 Spring Boot 的 bean；@SpringBootApplication这个注解是一个组合注解，里面有一个@SpringBootConfiguration注解，这个注解其实就是一个@Configuration，就说明了当前类是一个配置类，也就是这个启动类就是一个配置类，我们首先需要获取类的一个bean实例，也就是源bean。创建bean的过程其实是和Spring中创建bean的过程是差不多的，都是通过反射的方式来创建源bean。Spring Boot会读取BeanDefinitonLoader，将配置信息解析为Bean</li>
+    <li>web引用的类型推断一个 SpringBoot引用可以是web应用，也可以是非web应用。因为web应用会启动内置的tomcat，并且去监听8080端口，而非web应用会直接启动，Spring Boot 是默认会有一个自动检查机制，但是我们也可以去手动的。怎么自动检查的，会自动查找当前项目类路径下是否有相应的实现类，比如说有 Servlet，那肯定是一个 web 应用。具体的手动设置是通过webApplication类设置</li>
+    <li>加载应用上下文初始化器；在Spring中有一个Application，我们一般需要 new ClasspathXMLApplicationContext()来创建初始化器对象，但是在 Spring Boot中，这个哦当作是自动完成的。在构造方法里面，会去通过SpringFactory，获取一个ApplicationContextinitializer类对象，，由这个类进行上下文初始化器的初始化</li>
+    <li>加载事件监听器；具体的创建过程和加载上下文应用一样，也有由一个初始化器来创建，创建出来的监听器其实就是一个 ArrayList，创建完成之后，会开始监听器</li>
+    <li>推断引导类</li>
+</ol>
+
+<p>运行阶段</p>
+<ol>
+    <li>加载，运行 SpringApplication 运行监听器</li>
+    <li>监听 Spring Boot 事件</li>
+    <li>创建 Spring 应用上下文</li>
+    <li>创建Enviromnent</li>
+</ol>
+
       
 
       
@@ -178,16 +202,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/12/05/JVMMemory/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/02/04/Spring-Boot/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2022/02/03/Spring-MVC/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Spring MVC</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -207,153 +290,14 @@
 
 
 
-
-  
-    <article id="post-初识JVM" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/12/04/%E5%88%9D%E8%AF%86JVM/">初识JVM</a>
-    </h1>
-  
-
-        
-        <a href="/2021/12/04/%E5%88%9D%E8%AF%86JVM/" class="archive-article-date">
-  	<time datetime="2021-12-04T04:52:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>&ensp;&ensp;JVM是运行Java代码的家乡计算机，包括一套字节码指令集、一组寄存器、一个栈、一个垃圾回收，堆和一个存储方法域。JVM是运行在操作系统之上的，它与硬件没有直接的交互</p>
-<p><img src="/img/jvm.jpg" alt="JVM概览"></p>
-        
-          <a class="article-more-a" href="/2021/12/04/%E5%88%9D%E8%AF%86JVM/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/12/04/%E5%88%9D%E8%AF%86JVM/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/12/03/hello-world/">Hello World</a>
-    </h1>
-  
-
-        
-        <a href="/2021/12/03/hello-world/" class="archive-article-date">
-  	<time datetime="2021-12-03T03:38:44.028Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/12/03/hello-world/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -376,8 +320,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
