@@ -144,6 +144,71 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JAVA-反射" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/02/09/JAVA-%E5%8F%8D%E5%B0%84/">JAVA 反射</a>
+    </h1>
+  
+
+        
+        <a href="/2022/02/09/JAVA-%E5%8F%8D%E5%B0%84/" class="archive-article-date">
+  	<time datetime="2022-02-09T12:36:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="动态语言"><a href="#动态语言" class="headerlink" title="动态语言"></a>动态语言</h4><p>&ensp;&ensp;&ensp;&ensp;动态语言，是指程序在运行时可以改变其结构：新的函数可以引进，已有的函数可以被删除等结构上的变化。比如常见的 JavaScript 就是动态语言，而C、C++ 则不属于动态语言。从反射角度说 Java 属于版动态语言</p>
+        
+          <a class="article-more-a" href="/2022/02/09/JAVA-%E5%8F%8D%E5%B0%84/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/02/09/JAVA-%E5%8F%8D%E5%B0%84/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-MyBatis缓存" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -165,15 +230,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>&ensp;&ensp;&ensp;&ensp;MyBatis 中有一级缓存和二级缓存，默认情况下一级缓存是开启的，而且是不能关闭的。一级缓存是指 SqlSession 级别的缓存，当在同一个 SqlSession 中进行相同的 SQL 语句查询时，第二次以后的查询不会从数据库查询，而是直接从缓存中获取，一级缓存最多缓存 1024 条 SQL。二级缓存是指可以跨 SqlSession 的缓存。时 mapper 级别的缓存，对于 mapper 级别的缓存不同的 SqlSession 时可以共享的。</p>
-<p><img src="/img/MyBatis.jpg" alt="MyBatis"></p>
-<h4 id="MyBatis-的一级缓存（SqlSession-级别）"><a href="#MyBatis-的一级缓存（SqlSession-级别）" class="headerlink" title="MyBatis 的一级缓存（SqlSession 级别）"></a>MyBatis 的一级缓存（SqlSession 级别）</h4><p>&ensp;&ensp;&ensp;&ensp;第一次发出的一个查询 sql，sql 查询结果写入 SqlSession 的一级缓存中，缓存使用的数据结构时一个 map。<font color = "red">key:MapperId + offerset + limit + Sql + 所有的入参;value:用户信息。</font>同一个 SqlSession 再次发出相同的 sql，就从缓存中取出数据。<font color = "red">如果两次中间出现 commit 操作（修改、添加、删除），本 SqlSession 中的一级缓存区域全部清空，下次再去缓存中查询不到所以要从数据库查询，</font>从数据库查询到再写入缓存。</p>
-<h4 id="二级缓存原理（mapper-原理）"><a href="#二级缓存原理（mapper-原理）" class="headerlink" title="二级缓存原理（mapper 原理）"></a>二级缓存原理（mapper 原理）</h4><p>&ensp;&ensp;&ensp;&ensp;二级缓存的范围时 mapper 级别（mapper 同一个命名空间），mapper 以命名空间为单位创建缓存数据结构，结构时 map。MyBatis 的二级缓存是通过 CacheExecutor 实现的。CacheExecutor 其实是 Executor 的代理对象。所有的查询操作，再 CacheExecutor 中都会向匹配缓存中是否存在，不存在则查询数据库。具体使用配置如下：</p>
-<ol>
-    <li>MyBatis 全局配置中启动二级缓存配置</li>
-    <li>在对应的 Mapper.xml 中配置 cache 节点</li>
-    <li>在对应的 select 查询节点中添加 useCache = true</li>
-</ol>
-
+        
+          <a class="article-more-a" href="/2022/02/08/MyBatis%E7%BC%93%E5%AD%98/#more">more >></a>
+        
       
 
       
@@ -719,72 +778,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/12/30/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-线程生命周期" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/12/29/%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">线程生命周期</a>
-    </h1>
-  
-
-        
-        <a href="/2021/12/29/%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="archive-article-date">
-  	<time datetime="2021-12-29T06:10:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>&ensp;&ensp;&ensp;&ensp;当线程被创建并启动以后，它既不是已启动就进入了执行状态，也不是一致处于执行状态。在线程的生命周期中，它要经过新建、就绪、运行、阻塞和死亡 5 种状态。尤其时当线程启动以后，他不可能一直“霸占”着 CPU 独自运行，所以 CPU需要在多条线程之间切换，于是线程状态也会多次在运行、阻塞之间切换</p>
-<h4 id="新建状态"><a href="#新建状态" class="headerlink" title="新建状态"></a>新建状态</h4><p>&ensp;&ensp;&ensp;&ensp;当程序<font color = "red">使用 new 关键字创建了一个线程之后，</font>该线程就处于新建状态，此时仅有 JVM 为其分配内存，并初始化其成员变量的值。</p>
-        
-          <a class="article-more-a" href="/2021/12/29/%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/12/29/%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">展开全文 >></a>
         </p>
       
 
