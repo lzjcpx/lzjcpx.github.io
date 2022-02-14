@@ -144,6 +144,71 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-CAS" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/02/14/CAS/">CAS</a>
+    </h1>
+  
+
+        
+        <a href="/2022/02/14/CAS/" class="archive-article-date">
+  	<time datetime="2022-02-14T15:47:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="概念及特性"><a href="#概念及特性" class="headerlink" title="概念及特性"></a>概念及特性</h4><p>&ensp;&ensp;&ensp;&ensp;CAS（Compare And Swap/Set）比较并交换，CAS 算法的过程时这样：它包含3个参数（V,E,N）。<font color = "red">V 表示要更新的变量（内存值），E 表示预期值（旧的），N 表示新值。当且金丹V 值等于E值时，才会将V的值设为N，如果V值和E值不同，则说明已经有其他线程做了更新，则当前线程什么都不做。最后CAS 返回当前V的真实值。</font>CAS 操作时抱着乐观的态度进行的（乐观锁），它总是认为自己可以成功完成操作。<font color = "red">当多个线程同时使用 CAS 操作一个变量时，只有一个会胜出，并成功更新，其余均会失败。失败的线程不会倍挂起，仅时被改制失败，并允许再次尝试，当然也允许失败的线程放弃操作。</font>基于这样的原理，CAS 操作即使没有锁，也可以发现其实线程对当前线程的干扰，并进行恰当的处理。</p>
+        
+          <a class="article-more-a" href="/2022/02/14/CAS/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/02/14/CAS/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-JAVA-反射" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -713,71 +778,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/12/31/%E5%AF%B9Spring%E6%A1%86%E6%9E%B6%E7%9A%84%E7%90%86%E8%A7%A3/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-线程池原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/12/30/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86/">线程池原理</a>
-    </h1>
-  
-
-        
-        <a href="/2021/12/30/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86/" class="archive-article-date">
-  	<time datetime="2021-12-30T14:06:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>&ensp;&ensp;&ensp;&ensp;线程池做的工作主要是控制运行的线程的数量，处理过程中将任务放入队列，然后在线程创建后启动这些任务，如果线程数量超过了最大数量<font color = "red">超出数量的线程排队等候，</font>等其他线程执行完毕，再从队列中取出任务来执行。他的主要特点为：<font color = "red">线程服用；控制最大并发数；管理线程。</font></p>
-        
-          <a class="article-more-a" href="/2021/12/30/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/12/30/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86/">展开全文 >></a>
         </p>
       
 
