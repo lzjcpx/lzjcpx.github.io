@@ -6,15 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives | Hexo</title>
+  <title>什么是AQS | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/page/2/index.html">
+  <meta name="description" content="&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;AbstractQueuedSynchronizer 类如其名，抽象的队列式的同步器，AQS定义了一套多线程访问共享资源的同步器框架，许多同步类实现都依赖于它，如常用的ReentrantLock&#x2F;Semaphore&#x2F;CountDownLatch。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="什么是AQS">
+<meta property="og:url" content="http://example.com/2022/02/16/%E4%BB%80%E4%B9%88%E6%98%AFAQS/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;AbstractQueuedSynchronizer 类如其名，抽象的队列式的同步器，AQS定义了一套多线程访问共享资源的同步器框架，许多同步类实现都依赖于它，如常用的ReentrantLock&#x2F;Semaphore&#x2F;CountDownLatch。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/AQS.png">
+<meta property="article:published_time" content="2022-02-15T16:08:50.000Z">
+<meta property="article:modified_time" content="2022-02-15T18:16:43.167Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/AQS.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -142,295 +148,151 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-什么是AQS" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      什么是AQS
+    </h1>
+  
+
+        
+        <a href="/2022/02/16/%E4%BB%80%E4%B9%88%E6%98%AFAQS/" class="archive-article-date">
+  	<time datetime="2022-02-15T16:08:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-16</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>&ensp;&ensp;&ensp;&ensp;AbstractQueuedSynchronizer 类如其名，抽象的队列式的同步器，<font color = "red">AQS定义了一套多线程访问共享资源的同步器框架，</font>许多同步类实现都依赖于它，如常用的ReentrantLock/Semaphore/CountDownLatch。</p>
+<p><img src="/img/AQS.png" alt="AQS"></p>
+<span id="more"></span>
+
+<p>&ensp;&ensp;&ensp;&ensp;它维护了一个volatile int state（代表共享资源）和一个 FIFO 线程等待队列（多线程争用资源被阻塞时会进入此队列）。这里 volatile 时核心关键词，具体 volatile 的语义，在此不述。state 的访问方式右三种：getState()，setState(),compareAndSetState()<br/></p>
+<p><font color = "red">AQS定义两个资源共享方式</font><br/><br><b>Exclusive</b>独占资源-<b>ReetrantLock</b><br/><br><font color = "red">Exclusive（独占，只有一个线程能执行，如ReentrantLock）</font><br/><br><b>Share</b>共享资源-<b>Semaphore/CountDownLatch</b><br/></p>
+<p>&ensp;&ensp;&ensp;&ensp;<font color = "red">AQS只是一个框架，具体资源的获取/释放方式右自定义同步器去实现</font>AQS这里之定义了一个接口，具体资源的获取交友自定义同步器去实现了（通过state的get/set/CAS）之所以没有定义成abstract，是因为独占模式下只用实现 tryAcquire-tryRelease，而共享模式下只用实现tryAcquireShared-tryReleaseShared。如果都定义成abstract，那么每个模式也要去实现另一模式下的接口。不同的自定义同步器征用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源 state 的获取与释放即可，至于具体线程队列的维护（如获取资源失败入队/唤醒出队等），AQS 已经在顶层实现好了。自定义同步器实现时主要试想一下几种方法：</p>
+<ol>
+    <li>isHeldExclusively()：该线程是否正在独占资源。只有用到condition才会需要实现它。</li>
+    <li>tryAcquire(int)：独占方式。尝试获取资源，成功返回true，失败返回false</li>
+    <li>tryRelease(int)：独占方式。尝试释放资源，成功返回true，失败返回false</li>
+    <li>tryAcuireShared(int)：共享方式。尝试获取资源。负数表示失败；0表示成功，但没有剩余可用资源；正数表示成功，且右剩余资源</li>
+    <li>tryReleaseShared(int)：共享方式。尝试释放资源，如果释放后允许唤醒后续等待节点返回true，否则返回false</li>
+</ol>
+
+<p>&ensp;&ensp;&ensp;&ensp;同步器的实现时ABS核心，以ReentranLock为例，<font color = "red">state初始化为0，表示未锁定状态。A线程lock()时，会调用tryAcquire()独占该锁并将state+1.此后其他线程再tryAcuire()时就会失败，知道A线程unlock()到state=0（释放锁）为止，</font>其他线程才有机会获取该锁。当然，释放锁之前，<font color = "red">A线程自己时可以重复获取此锁的（state会累加），这就是可重入的概念。</font>但要注意，获取多少次就需要释放多少次，这样才能保证state能回到零态的。<br/></p>
+<p>&ensp;&ensp;&ensp;&ensp;以CountDownLatch为例，任务分为N个子线程执行，state也初始化为N（注意N要与线程个数一致）。这N个子线程时并行执行的，<font color = "red">每个子线程执行完后countDown()一次，state会CAS减1.等到所有子线程执行完后（即state = 0），会unpack()主调用线程，</font>然后主调用线程就会从await()函数返回，结束后余动作。<br/></p>
+<p><b>ReentrantReadWriteLock</b>实现独占和共享两种方式<br/><br>&ensp;&ensp;&ensp;&ensp;一般来说，自动逸同步器要么时独占方法，要么时共享方式，他们也许实现 tryAcquiretryRelease、tryAcquireShared-tryReleaseShared 中的一种即可。<font color = "red">但AQS也支持自定义同步器通过是实现独占和共享两种方式，如ReentranReadWriteLock。</font></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/31/%E5%AF%B9Spring%E6%A1%86%E6%9E%B6%E7%9A%84%E7%90%86%E8%A7%A3/" class="archive-article-date">
-  	<time datetime="2021-12-31T08:34:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-31</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/31/%E5%AF%B9Spring%E6%A1%86%E6%9E%B6%E7%9A%84%E7%90%86%E8%A7%A3/">对Spring框架的理解</a>
-    </h1>
-  
+      
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/02/16/%E4%BB%80%E4%B9%88%E6%98%AFAQS/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/30/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86/" class="archive-article-date">
-  	<time datetime="2021-12-30T14:06:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-30</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2022/02/14/CAS/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">CAS</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/30/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86/">线程池原理</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/29/%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="archive-article-date">
-  	<time datetime="2021-12-29T06:10:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-29</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/29/%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">线程生命周期</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/27/4%E4%B8%AD%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="archive-article-date">
-  	<time datetime="2021-12-27T09:24:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-27</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/27/4%E4%B8%AD%E7%BA%BF%E7%A8%8B%E6%B1%A0/">4中线程池</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/25/Java%E5%88%9B%E5%BB%BA%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%96%B9%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2021-12-25T10:49:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/25/Java%E5%88%9B%E5%BB%BA%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%96%B9%E5%BC%8F/">Java创建多线程的方式</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/23/Map/" class="archive-article-date">
-  	<time datetime="2021-12-23T07:33:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/23/Map/">Map</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/22/Set/" class="archive-article-date">
-  	<time datetime="2021-12-22T04:05:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/22/Set/">Set</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/18/List/" class="archive-article-date">
-  	<time datetime="2021-12-18T11:46:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-18</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/18/List/">List</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/18/Java%E9%9B%86%E5%90%88%E6%A6%82%E8%A7%88/" class="archive-article-date">
-  	<time datetime="2021-12-18T11:40:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-18</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/18/Java%E9%9B%86%E5%90%88%E6%A6%82%E8%A7%88/">Java集合概览</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/12/16/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/" class="archive-article-date">
-  	<time datetime="2021-12-16T10:10:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/12/16/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/">双亲委派机制</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/">&amp;laquo; Prev</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/3/">Next &amp;raquo;</a>
-    </nav>
   
 
 
@@ -454,8 +316,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
