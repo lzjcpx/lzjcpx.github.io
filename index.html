@@ -144,6 +144,71 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-CyclicBarrier、CountDownLatch、Semaphore的用法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/02/25/CyclicBarrier%E3%80%81CountDownLatch%E3%80%81Semaphore%E7%9A%84%E7%94%A8%E6%B3%95/">CyclicBarrier、CountDownLatch、Semaphore的用法</a>
+    </h1>
+  
+
+        
+        <a href="/2022/02/25/CyclicBarrier%E3%80%81CountDownLatch%E3%80%81Semaphore%E7%9A%84%E7%94%A8%E6%B3%95/" class="archive-article-date">
+  	<time datetime="2022-02-25T14:30:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="CountDownLatch-线程计数器"><a href="#CountDownLatch-线程计数器" class="headerlink" title="CountDownLatch(线程计数器)"></a>CountDownLatch(线程计数器)</h4><p>&ensp;&ensp;&ensp;&ensp;CountDownLatch类位于java.util.concurrent包下，利用它可以实现类似计数器的功能。比如有一个任务A，它要等待其他4个任务执行完毕后才能执行，此时就可以利用CountDownLatch来实现这种功能了。<br/></p>
+        
+          <a class="article-more-a" href="/2022/02/25/CyclicBarrier%E3%80%81CountDownLatch%E3%80%81Semaphore%E7%9A%84%E7%94%A8%E6%B3%95/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/02/25/CyclicBarrier%E3%80%81CountDownLatch%E3%80%81Semaphore%E7%9A%84%E7%94%A8%E6%B3%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-什么是AQS" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -710,75 +775,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2022/01/02/Spring-Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Spring的启动流程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/01/01/Spring%E7%9A%84%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">Spring的启动流程</a>
-    </h1>
-  
-
-        
-        <a href="/2022/01/01/Spring%E7%9A%84%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2022-01-01T05:26:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-01-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-    <li>我们一般使用 Spring 的时候，会写一个 xml 配置文件，里面配置我们的 Bean 相关信息。我们一般是使用 ClassPathXmlApplicationContext 这个类去引用类路径下面的配置文件。这个 new ClassPathXmlApplicationContext() 底层调用了一个refresh() 方法，这个方法对于 IOC 容器来说非常关键。</li>
-    <li>这个 refresh() 方法底层调用了12个具体的方法，这12个方法中有三个方法比较重要。</li>
-    <li>ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory()</li>
-    <li>finishBeanFactoryInitalization(beanFactory);</li>
-        
-          <a class="article-more-a" href="/2022/01/01/Spring%E7%9A%84%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/01/01/Spring%E7%9A%84%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">展开全文 >></a>
         </p>
       
 

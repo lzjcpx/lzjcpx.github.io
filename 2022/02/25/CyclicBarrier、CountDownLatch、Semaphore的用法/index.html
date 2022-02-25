@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives: 2022 | Hexo</title>
+  <title>CyclicBarrier、CountDownLatch、Semaphore的用法 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/2022/index.html">
+  <meta name="description" content="CountDownLatch(线程计数器)&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;CountDownLatch类位于java.util.concurrent包下，利用它可以实现类似计数器的功能。比如有一个任务A，它要等待其他4个任务执行完毕后才能执行，此时就可以利用CountDownLatch来实现这种功能了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CyclicBarrier、CountDownLatch、Semaphore的用法">
+<meta property="og:url" content="http://example.com/2022/02/25/CyclicBarrier%E3%80%81CountDownLatch%E3%80%81Semaphore%E7%9A%84%E7%94%A8%E6%B3%95/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="CountDownLatch(线程计数器)&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;CountDownLatch类位于java.util.concurrent包下，利用它可以实现类似计数器的功能。比如有一个任务A，它要等待其他4个任务执行完毕后才能执行，此时就可以利用CountDownLatch来实现这种功能了。">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-25T14:30:25.000Z">
+<meta property="article:modified_time" content="2022-02-25T14:55:29.767Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -142,295 +146,171 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-CyclicBarrier、CountDownLatch、Semaphore的用法" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      CyclicBarrier、CountDownLatch、Semaphore的用法
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2022" class="archive-year">2022</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/25/CyclicBarrier%E3%80%81CountDownLatch%E3%80%81Semaphore%E7%9A%84%E7%94%A8%E6%B3%95/" class="archive-article-date">
+
+        
+        <a href="/2022/02/25/CyclicBarrier%E3%80%81CountDownLatch%E3%80%81Semaphore%E7%9A%84%E7%94%A8%E6%B3%95/" class="archive-article-date">
   	<time datetime="2022-02-25T14:30:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-25</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/25/CyclicBarrier%E3%80%81CountDownLatch%E3%80%81Semaphore%E7%9A%84%E7%94%A8%E6%B3%95/">CyclicBarrier、CountDownLatch、Semaphore的用法</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="CountDownLatch-线程计数器"><a href="#CountDownLatch-线程计数器" class="headerlink" title="CountDownLatch(线程计数器)"></a>CountDownLatch(线程计数器)</h4><p>&ensp;&ensp;&ensp;&ensp;CountDownLatch类位于java.util.concurrent包下，利用它可以实现类似计数器的功能。比如有一个任务A，它要等待其他4个任务执行完毕后才能执行，此时就可以利用CountDownLatch来实现这种功能了。<br/></p>
+<span id="more"></span>
 
-        <div class="article-info info-on-right">
-          
-          
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> CountDownLatch latch = <span class="keyword">new</span> CountDownLatch(<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">new</span> Thread()&#123;<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子线程&quot;</span>+Thread.currentThread().getName()+<span class="string">&quot;正在执行&quot;</span>);</span><br><span class="line">        Thread.sleep(<span class="number">3000</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;子线程&quot;</span>+Thread.currentThread().getName()+<span class="string">&quot;执行完毕&quot;</span>);</span><br><span class="line">        latch.countDown();</span><br><span class="line">    &#125;;&#125;.start();</span><br><span class="line">    <span class="keyword">new</span> Thread()&#123; <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;子线程&quot;</span>+Thread.currentThread().getName()+<span class="string">&quot;正在执行&quot;</span>);</span><br><span class="line">        Thread.sleep(<span class="number">3000</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;子线程&quot;</span>+Thread.currentThread().getName()+<span class="string">&quot;执行完毕&quot;</span>);</span><br><span class="line">        latch.countDown();</span><br><span class="line">    &#125;;&#125;.start();</span><br><span class="line">    System.out.println(<span class="string">&quot;等待 2 个子线程执行完毕...&quot;</span>);</span><br><span class="line">    latch.await();</span><br><span class="line">    System.out.println(<span class="string">&quot;2 个子线程已经执行完毕&quot;</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;继续执行主线程&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h4 id="CyclicBarrier-回环栅栏-等待至barrier状态再全部同时执行"><a href="#CyclicBarrier-回环栅栏-等待至barrier状态再全部同时执行" class="headerlink" title="CyclicBarrier(回环栅栏-等待至barrier状态再全部同时执行)"></a>CyclicBarrier(回环栅栏-等待至barrier状态再全部同时执行)</h4><p>&ensp;&ensp;&ensp;&ensp;字面意思回环栅栏，通过它可以实现让一组线程等待至某个状态之后再全部同时执行。叫做回环是因为当所有等待线程都被释放以后，CyclicBarrier可以被重用。我们暂且把这个状态叫barrier，当调用await()方法之后，线程就处于barrier了。CyclicBarrier中最重要的方法就是await方法，它有两个重载版本：</p>
+<ol>
+    <li>public int await():用来挂起当前线程，直至所有线程都到达barrier状态再同时执行后续任务</li>
+    <li>public int await(long timeout, TimeUnit unit):让这些线程等待至一定的时间，如果还有线程没有到达barrier状态就直接让到达barrier的线程执行后续任务</li>
+</ol>
+
+<p>具体使用如下，另外CylicBarrier是可以重用的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> N = <span class="number">4</span>;</span><br><span class="line">    CyclicBarrier barrier = <span class="keyword">new</span> CyclicBarrier(N);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)<span class="keyword">new</span> Writer(barrier).start();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Writer</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123; </span><br><span class="line">    <span class="keyword">private</span> CyclicBarrier cyclicBarrier;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Writer</span><span class="params">(CyclicBarrier cyclicBarrier)</span> </span>&#123; </span><br><span class="line">        <span class="keyword">this</span>.cyclicBarrier = cyclicBarrier;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123; </span><br><span class="line">    <span class="keyword">try</span> &#123; </span><br><span class="line">        Thread.sleep(<span class="number">5000</span>); <span class="comment">//以睡眠来模拟线程需要预定写入数据操作</span></span><br><span class="line">        System.out.println(<span class="string">&quot;线程&quot;</span>+Thread.currentThread().getName()+<span class="string">&quot;写入数据完毕，等待其他线程写入完毕&quot;</span>);</span><br><span class="line">        cyclicBarrier.await();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123; </span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;<span class="keyword">catch</span>(BrokenBarrierException e)&#123; </span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">&quot;所有线程写入完毕，继续处理其他任务，比如数据操作&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Semaphore-信号量-控制同时访问的线程个数"><a href="#Semaphore-信号量-控制同时访问的线程个数" class="headerlink" title="Semaphore(信号量-控制同时访问的线程个数)"></a>Semaphore(信号量-控制同时访问的线程个数)</h4><p>&ensp;&ensp;&ensp;&ensp;Semaphore翻译成字面意思为信号量，<font color = "red">Semaphore可以控制同时访问的线程个数，</font>通过acquire()获取一个许可，如果没有等待，而release()释放一个许可。Semaphore类中有比较重要的几个方法:</p>
+<ol>
+    <li>public void acquire():用来获取一个许可，若无许可能够获得，则会一直等待，知道获取许可。</li>
+    <li>public void acquire(int permits):获取permits个许可</li>
+    <li>public void release(){}:释放许可。注意，再释放许可之前，必须想获得许可</li>
+    <li>public void release(int permits){}:释放permits个许可</li>
+</ol>
+
+<p>&ensp;&ensp;&ensp;&ensp;上面4个方法都会被阻塞，如果像立即得到执行结果，可以使用下面几个方法：</p>
+<ol>
+    <li>public boolean tryAcquire():尝试获取一个许可，若获取成功，则立即返回 true，若获取失败，则立即返回 false</li>
+    <li>public boolean tryAcquire(long timeout, TimeUnit unit):尝试获取一个许可，若在指定的时间内获取成功，则立即返回 true，否则则立即返回 false</li>
+    <li>public boolean tryAcquire(int permits):尝试获取 permits 个许可，若获取成功，则立即返回 true，若获取失败，则立即返回 false</li>
+    <li>public boolean tryAcquire(int permits, long timeout, TimeUnit unit): 尝试获取 permits个许可，若在指定的时间内获取成功，则立即返回 true，否则则立即返回 false</li>
+    <li>还可以通过 availablePermits()方法得到可用的许可数目。</li>
+</ol>
+
+<p>&ensp;&ensp;&ensp;&ensp;例子：若一个工厂有5台及其，但有8个工人，一台及其同时只能被一个工人使用，只有使用完了，其他工人才能继续使用，那么我们就可以通过Semaphore来实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> N = <span class="number">8</span>; <span class="comment">//工人数</span></span><br><span class="line">Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">5</span>); <span class="comment">//机器数目</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;N;i++)</span><br><span class="line">    <span class="keyword">new</span> Worker(i,semaphore).start();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Worker</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> num;</span><br><span class="line"><span class="keyword">private</span> Semaphore semaphore;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Worker</span><span class="params">(<span class="keyword">int</span> num,Semaphore semaphore)</span></span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.num = num;</span><br><span class="line">    <span class="keyword">this</span>.semaphore = semaphore;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        semaphore.acquire();</span><br><span class="line">        System.out.println(<span class="string">&quot;工人&quot;</span>+<span class="keyword">this</span>.num+<span class="string">&quot;占用一个机器在生产...&quot;</span>);</span><br><span class="line">        Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;工人&quot;</span>+<span class="keyword">this</span>.num+<span class="string">&quot;释放出机器&quot;</span>);</span><br><span class="line">        semaphore.release();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+    <li>CountDownLatch和CycliBarrier都能够实现线程之间的等待，只不过他们侧重点不同；CountDownLatch一般用于某个<font color = "red">线程A等待若干个其他线程执行完任务之后，</font>它才执行，而<font color = "red">CyclicBarrier一般用于一组线程互相等待至某个状态，</font>然后这一组线程再同时执行；另外，CountDownLatch是不能够重用的，而CyclicBarrier是可以重用的。</li>
+    <li>Semaphore其实和锁有点类似，它一般用于控制某组资源的访问权限</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/02/25/CyclicBarrier%E3%80%81CountDownLatch%E3%80%81Semaphore%E7%9A%84%E7%94%A8%E6%B3%95/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/16/%E4%BB%80%E4%B9%88%E6%98%AFAQS/" class="archive-article-date">
-  	<time datetime="2022-02-15T16:08:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-16</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2022/02/16/%E4%BB%80%E4%B9%88%E6%98%AFAQS/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">什么是AQS</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/16/%E4%BB%80%E4%B9%88%E6%98%AFAQS/">什么是AQS</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/14/CAS/" class="archive-article-date">
-  	<time datetime="2022-02-14T15:47:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/14/CAS/">CAS</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/09/JAVA-%E5%8F%8D%E5%B0%84/" class="archive-article-date">
-  	<time datetime="2022-02-09T12:36:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/09/JAVA-%E5%8F%8D%E5%B0%84/">JAVA 反射</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/08/MyBatis%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2022-02-08T09:39:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/08/MyBatis%E7%BC%93%E5%AD%98/">MyBatis缓存</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/07/%E4%BB%80%E4%B9%88%E6%98%AFMyBatis%EF%BC%8CMyBatis%E8%A7%A3%E5%86%B3%E4%BA%86JDBC%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2022-02-07T11:34:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/07/%E4%BB%80%E4%B9%88%E6%98%AFMyBatis%EF%BC%8CMyBatis%E8%A7%A3%E5%86%B3%E4%BA%86JDBC%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98/">什么是MyBatis，MyBatis解决了JDBC哪些问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/04/Spring-Boot/" class="archive-article-date">
-  	<time datetime="2022-02-04T12:24:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/04/Spring-Boot/">Spring Boot</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/03/Spring-MVC/" class="archive-article-date">
-  	<time datetime="2022-02-03T07:37:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/03/Spring-MVC/">Spring MVC</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/01/03/Spring%E4%B8%AD%E4%BD%BF%E7%94%A8%E4%BA%86%E5%93%AA%E4%BA%9B%E6%B3%A8%E8%A7%A3%EF%BC%9F%E6%B3%A8%E8%A7%A3%E7%9A%84%E5%8E%9F%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/" class="archive-article-date">
-  	<time datetime="2022-01-03T09:06:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-01-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/01/03/Spring%E4%B8%AD%E4%BD%BF%E7%94%A8%E4%BA%86%E5%93%AA%E4%BA%9B%E6%B3%A8%E8%A7%A3%EF%BC%9F%E6%B3%A8%E8%A7%A3%E7%9A%84%E5%8E%9F%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/">Spring中使用了哪些注解？注解的原理是什么？</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/01/02/Spring-Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="archive-article-date">
-  	<time datetime="2022-01-02T10:19:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-01-02</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/01/02/Spring-Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Spring Bean的生命周期</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/2022/page/2/">2</a><a class="extend next" rel="next" href="/archives/2022/page/2/">Next &amp;raquo;</a>
-    </nav>
   
 
 
@@ -454,8 +334,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
