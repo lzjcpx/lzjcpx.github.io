@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives: 2022/2 | Hexo</title>
+  <title>乐观锁、悲观锁和自旋锁 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/2022/02/index.html">
+  <meta name="description" content="乐观锁&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;乐观锁是一种乐观思想，认为读多写少，遇到并发写的可能性低，每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，采取在写时先读取当前版本号，然后加锁操作（比较跟上一次的版本号，如果一样则更新），如果失败则要重复读-比较-写的操作。Java中的乐观锁基本是通过CAS操作实现的，CAS是一种">
+<meta property="og:type" content="article">
+<meta property="og:title" content="乐观锁、悲观锁和自旋锁">
+<meta property="og:url" content="http://example.com/2022/02/27/%E4%B9%90%E8%A7%82%E9%94%81%E3%80%81%E6%82%B2%E8%A7%82%E9%94%81%E5%92%8C%E8%87%AA%E6%97%8B%E9%94%81/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="乐观锁&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;乐观锁是一种乐观思想，认为读多写少，遇到并发写的可能性低，每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，采取在写时先读取当前版本号，然后加锁操作（比较跟上一次的版本号，如果一样则更新），如果失败则要重复读-比较-写的操作。Java中的乐观锁基本是通过CAS操作实现的，CAS是一种">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-27T07:25:34.000Z">
+<meta property="article:modified_time" content="2022-02-27T07:51:52.566Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -142,265 +146,146 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-乐观锁、悲观锁和自旋锁" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      乐观锁、悲观锁和自旋锁
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2022" class="archive-year">2022</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/27/%E4%B9%90%E8%A7%82%E9%94%81%E3%80%81%E6%82%B2%E8%A7%82%E9%94%81%E5%92%8C%E8%87%AA%E6%97%8B%E9%94%81/" class="archive-article-date">
+
+        
+        <a href="/2022/02/27/%E4%B9%90%E8%A7%82%E9%94%81%E3%80%81%E6%82%B2%E8%A7%82%E9%94%81%E5%92%8C%E8%87%AA%E6%97%8B%E9%94%81/" class="archive-article-date">
   	<time datetime="2022-02-27T07:25:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-27</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/27/%E4%B9%90%E8%A7%82%E9%94%81%E3%80%81%E6%82%B2%E8%A7%82%E9%94%81%E5%92%8C%E8%87%AA%E6%97%8B%E9%94%81/">乐观锁、悲观锁和自旋锁</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h4><p>&ensp;&ensp;&ensp;&ensp;乐观锁是一种乐观思想，认为读多写少，遇到并发写的可能性低，每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是<font color = "red">在更新的时候会判断一下在此期间别人有没有去更新这个数据，采取在写时先读取当前版本号，然后加锁操作</font>（比较跟上一次的版本号，如果一样则更新），如果失败则要重复读-比较-写的操作。Java中的乐观锁基本是通过CAS操作实现的，CAS是一种更新的原子才做，<font color = "red">比较当前值和传入值是否一样，一样则更新，否则失败。</font></p>
+<span id="more"></span>
 
-        <div class="article-info info-on-right">
-          
-          
+<h4 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h4><p>&ensp;&ensp;&ensp;&ensp;悲观锁就是悲观思想，即认为写多，遇到并发的可能性高，每次去拿数据的时候都认为别人会修改，所以每次在读写数据的时候都会上锁，这样别人想读写这个数据就会block直接拿到所。Java中的悲观锁就是Synchronized，AQS框架下的锁则是先尝试CAS乐观锁去获取锁，获取不到，才会转换为悲观锁，如RetreenLock。</p>
+<h4 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h4><p>&ensp;&ensp;&ensp;&ensp;自旋锁的原理非常简单，<font color = "red">如果持有锁的线程能在很短时间内释放锁资源，那么哪些等待竞争锁的线程就不需要做内核态和用户态之间的切换进入阻塞挂起状态，他们只需要等一等（自旋），等持有的锁的线程释放锁后立即获取锁，这样就能避免用户线程和内核的切换消耗。</font><br/></p>
+<p>&ensp;&ensp;&ensp;&ensp;线程自旋是需要小号CPU的，说白了就是让CPU在做无用功，如果一直获取不到锁，那线程也不能一直占用CPU自旋做无用功，所以需要设定一个自旋等待的最大时间。<br/></p>
+<p>&ensp;&ensp;&ensp;&ensp;如果持有锁的线程执行的时间超过资源等待的最大时间仍没有释放锁，就会导致其他争用锁的线程在最大等待时间内还是获取不到锁，这时争用线程会停止自旋进入阻塞状态。<br/></p>
+<h6 id="自旋所的优缺点"><a href="#自旋所的优缺点" class="headerlink" title="自旋所的优缺点"></a>自旋所的优缺点</h6><p>&ensp;&ensp;&ensp;&ensp;自旋锁尽可能的减少线程的阻塞，这对于锁的竞争不激烈，且占用锁时间非常短的代码块来说性能能大幅度的提升，因为自旋的消耗小于线程阻塞挂起再唤醒的操作消耗，这些操作会导致线程发生两次上下文切换。<br/></p>
+<p>&ensp;&ensp;&ensp;&ensp;但是如果锁的竞争激烈，或者持有锁的线程需要长时间占用锁执行同步块，这时候就不适合使用自旋锁了，因为自旋锁在获取锁之前一直都是占用CPU做无用功的，同时有大量线程在竞争一个锁，会导致获取锁的时间很长，线程自旋的消耗大于线程阻塞挂起操作的消耗，其他需要CPU的线程又不能获取到CPU，造成CPU的浪费。所以这种情况下我们要关闭自旋锁。</p>
+<h6 id="自旋锁时间阈值（1-6引入了适应性自旋锁）"><a href="#自旋锁时间阈值（1-6引入了适应性自旋锁）" class="headerlink" title="自旋锁时间阈值（1.6引入了适应性自旋锁）"></a>自旋锁时间阈值（1.6引入了适应性自旋锁）</h6><p>&ensp;&ensp;&ensp;&ensp;自旋锁的目的是为了占着CPU的资源不释放，等到获取到锁立即进行处理。但是如何去选择自旋的执行时间呢？如果自旋执行太长，会有大量的线程处于自旋状态占用CPU资源，今儿影响整体系统的性能。因此自旋的周期选的额外重要！<br/></p>
+<p>&ensp;&ensp;&ensp;&ensp;JVM对于自旋周期的选择，jdk1.5这个限度是一定的写死的，<font color = "red">在1.6引入了适应性自旋锁，</font>适应性自旋锁意味着自旋的时间不再是固定的了，而是<font color = "red">由前一次在锁上的自选时间以及锁拥有者来决定，</font>基本认为一个线程上下文切换的时间是最佳的一个时间，同时JVM还针对当前CPU的负荷情况做了较多的优化，如果平均负载小于CPUs则一直自旋，如果有超过（CPUs/2）个线程正在自旋，则后来线程直接阻塞，如果正在自旋的线程发现Owner发生了变化则延迟自旋时间（自旋计数）或进入阻塞，如果CPU处于节电模式则停止自旋，自旋时间的最坏情况是CPU的存储延迟（CPU A存储了一个数据，到CPU B得知这个数据直接的时间差），自旋时会释放放弃线程优先级之间的差异。</p>
+<h6 id="自旋锁的开启"><a href="#自旋锁的开启" class="headerlink" title="自旋锁的开启"></a>自旋锁的开启</h6><p>JDK1.6中-XX:+useSpinning 开启；<br>-XX:PreBlockSpin=10 为自旋次数;<br>JDK1.7后，去掉此参数，由JVM控制;</p>
 
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/02/27/%E4%B9%90%E8%A7%82%E9%94%81%E3%80%81%E6%82%B2%E8%A7%82%E9%94%81%E5%92%8C%E8%87%AA%E6%97%8B%E9%94%81/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/25/CyclicBarrier%E3%80%81CountDownLatch%E3%80%81Semaphore%E7%9A%84%E7%94%A8%E6%B3%95/" class="archive-article-date">
-  	<time datetime="2022-02-25T14:30:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-25</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2022/02/25/CyclicBarrier%E3%80%81CountDownLatch%E3%80%81Semaphore%E7%9A%84%E7%94%A8%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">CyclicBarrier、CountDownLatch、Semaphore的用法</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/25/CyclicBarrier%E3%80%81CountDownLatch%E3%80%81Semaphore%E7%9A%84%E7%94%A8%E6%B3%95/">CyclicBarrier、CountDownLatch、Semaphore的用法</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/16/%E4%BB%80%E4%B9%88%E6%98%AFAQS/" class="archive-article-date">
-  	<time datetime="2022-02-15T16:08:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/16/%E4%BB%80%E4%B9%88%E6%98%AFAQS/">什么是AQS</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/14/CAS/" class="archive-article-date">
-  	<time datetime="2022-02-14T15:47:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/14/CAS/">CAS</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/09/JAVA-%E5%8F%8D%E5%B0%84/" class="archive-article-date">
-  	<time datetime="2022-02-09T12:36:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/09/JAVA-%E5%8F%8D%E5%B0%84/">JAVA 反射</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/08/MyBatis%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2022-02-08T09:39:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/08/MyBatis%E7%BC%93%E5%AD%98/">MyBatis缓存</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/07/%E4%BB%80%E4%B9%88%E6%98%AFMyBatis%EF%BC%8CMyBatis%E8%A7%A3%E5%86%B3%E4%BA%86JDBC%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2022-02-07T11:34:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/07/%E4%BB%80%E4%B9%88%E6%98%AFMyBatis%EF%BC%8CMyBatis%E8%A7%A3%E5%86%B3%E4%BA%86JDBC%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98/">什么是MyBatis，MyBatis解决了JDBC哪些问题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/04/Spring-Boot/" class="archive-article-date">
-  	<time datetime="2022-02-04T12:24:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/04/Spring-Boot/">Spring Boot</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/02/03/Spring-MVC/" class="archive-article-date">
-  	<time datetime="2022-02-03T07:37:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-02-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/02/03/Spring-MVC/">Spring MVC</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -423,8 +308,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
